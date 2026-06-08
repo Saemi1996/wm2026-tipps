@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WM 2026 &ndash; ML Tipps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0d1b2a; --bg2:#13263b; --gold:#FFD700; --green:#00c853; --txt:#e6eef6; --muted:#8aa0b5; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:linear-gradient(160deg,#0d1b2a,#0a1422); color:var(--txt);
+         font-family:'IBM Plex Sans',sans-serif; }
+  header { padding:28px 18px 10px; text-align:center; border-bottom:1px solid #1e3a57; }
+  h1 { font-family:'Oswald',sans-serif; font-size:2.1rem; margin:0; letter-spacing:1px;
+        text-transform:uppercase; }
+  h1 .acc { color:var(--gold); }
+  .sub { color:var(--muted); font-size:.9rem; margin-top:6px; }
+  .bannerbar { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:12px;
+        font-size:.82rem; color:var(--muted); }
+  .bannerbar span { background:#10233a; padding:5px 12px; border-radius:20px; border:1px solid #1d3a55; }
+  .tabs { display:flex; justify-content:center; gap:10px; margin:18px 0 6px; flex-wrap:wrap; }
+  .tab { font-family:'Oswald',sans-serif; cursor:pointer; padding:10px 22px; border-radius:24px;
+        background:#10233a; color:var(--txt); border:1px solid #20405f; font-size:1rem;
+        text-transform:uppercase; letter-spacing:.5px; }
+  .tab.active { background:var(--gold); color:#0d1b2a; font-weight:700; }
+  main { max-width:1180px; margin:0 auto; padding:14px 16px 60px; }
+  .panel { display:none; }
+  .panel.active { display:block; }
+  details.legend { margin:0 auto 14px; max-width:760px; background:#10233a; border:1px solid #1d3a55;
+        border-radius:10px; padding:8px 14px; font-size:.85rem; color:var(--muted); }
+  details.legend summary { cursor:pointer; color:var(--txt); }
+  .day-title { font-family:'Oswald',sans-serif; color:var(--gold); border-bottom:1px solid #1d3a55;
+        padding-bottom:6px; margin:26px 0 14px; font-weight:500; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .card { background:var(--bg2); border:1px solid #1e3a57; border-radius:14px; padding:16px;
+        box-shadow:0 4px 18px rgba(0,0,0,.3); }
+  .card-head { display:flex; justify-content:space-between; font-size:.74rem; color:var(--muted);
+        text-transform:uppercase; letter-spacing:.5px; }
+  .teams { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:6px; margin:12px 0 6px; }
+  .team { display:flex; align-items:center; gap:8px; font-weight:600; font-size:1.02rem; }
+  .team.away { justify-content:flex-end; }
+  .flag { font-size:1.5rem; }
+  .score { font-family:'Oswald',sans-serif; font-size:2rem; color:var(--gold); padding:0 10px;
+        font-weight:700; }
+  .tendency-badge { display:inline-block; border:1.5px solid; border-radius:18px; padding:3px 14px;
+        font-size:.82rem; font-weight:600; margin:6px auto 12px; }
+  .bars { margin:8px 0; }
+  .bar-row { display:grid; grid-template-columns:120px 1fr 40px; align-items:center; gap:8px;
+        margin:5px 0; font-size:.78rem; }
+  .bar-label { color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar-track { background:#0a1626; border-radius:6px; height:12px; overflow:hidden; }
+  .bar-track.small { height:10px; }
+  .bar-fill { height:100%; width:0; border-radius:6px; animation:grow 1s ease forwards; }
+  @keyframes grow { to { width:var(--w); } }
+  .bar-val { text-align:right; color:var(--txt); font-variant-numeric:tabular-nums; }
+  .meta-row { display:flex; justify-content:space-between; align-items:center; margin-top:10px;
+        font-size:.82rem; }
+  .exp { color:var(--gold); font-weight:600; }
+  details { margin-top:10px; font-size:.82rem; }
+  details summary { cursor:pointer; color:var(--muted); }
+  .det ul { margin:6px 0 0; padding-left:18px; }
+  .det .imp { color:var(--muted); }
+  h3 .pts { float:right; color:var(--green); font-size:.8rem; font-weight:600;
+        font-family:'IBM Plex Sans'; background:#10233a; padding:3px 10px; border-radius:14px; }
+  .rank-block { background:var(--bg2); border:1px solid #1e3a57; border-radius:12px; padding:12px 16px; margin-bottom:8px; }
+  .q-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;
+        border-bottom:1px solid #1e3a57; padding-bottom:8px; flex-wrap:wrap; gap:6px; }
+  .q-tip { font-family:'Oswald'; font-size:1.15rem; color:var(--gold); }
+  .q-tip b { font-size:1.35rem; }
+  .rank-row { display:grid; grid-template-columns:200px 1fr 56px; align-items:center; gap:10px; margin:7px 0; }
+  .rank-team { font-weight:600; }
+  .rank-val { text-align:right; font-variant-numeric:tabular-nums; color:var(--gold); }
+  .grp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+  .grp-card { background:var(--bg2); border:1px solid #1e3a57; border-radius:12px; padding:12px; text-align:center; }
+  .grp-title { font-family:'Oswald'; color:var(--muted); font-size:.85rem; text-transform:uppercase; }
+  .grp-pick { font-weight:600; margin:6px 0 2px; }
+  .grp-prob { color:var(--gold); font-weight:700; font-family:'Oswald'; font-size:1.3rem; }
+  .bonus-note,.muted { color:var(--muted); font-size:.85rem; }
+  .small-h { margin:4px 0; font-size:.78rem; }
+  h2 { font-family:'Oswald'; color:var(--gold); }
+  h3 { font-family:'Oswald'; margin-top:26px; }
+  footer { text-align:center; color:var(--muted); font-size:.78rem; padding:24px 16px 40px;
+        border-top:1px solid #1d3a55; margin-top:30px; }
+  code { background:#10233a; padding:2px 6px; border-radius:5px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>WM 2026 <span class="acc">ML-Tipps</span></h1>
+  <div class="sub">SRF Tippspiel &middot; Letzte Aktualisierung: 08.06.2026 20:46</div>
+  <div class="bannerbar">
+    <span>&#9881; Quadro P2000 (4.3 GB VRAM, CUDA 12.1)</span>
+    <span>&#128202; 16 Spiele in 7 Tagen</span>
+    <span>&#129302; Elo &middot; Form &middot; H2H &middot; WM-Historik</span>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-p="games">Anstehende Spiele</div>
+    <div class="tab" data-p="bonus">Zusatzfragen</div>
+  </div>
+</header>
+<main>
+  <details class="legend">
+    <summary>Punktevergabe (SRF-Regeln)</summary>
+    <p><b>Gruppenphase (max. 10):</b> 5 Tendenz &middot; 1 Heimtore &middot; 1 Gasttore &middot; 3 Tordifferenz.<br>
+       <b>K.O.-Phase (max. 20):</b> 10 Tendenz &middot; 2 Heimtore &middot; 2 Gasttore &middot; 6 Tordifferenz.<br>
+       <b>Zusatz:</b> Weltmeister 50 &middot; Torschuetzenkoenig-Team 20 &middot; je Gruppensieger 20 &middot; je Halbfinalist 20.</p>
+  </details>
+
+  <section id="games" class="panel active">
+    <p class="muted" style="margin:0 0 10px">Tipp = <b>wahrscheinlichstes Resultat</b> (Modus der Modellverteilung). „~Pkt" = erwartete SRF-Punkte dieses Tipps.</p>
+    <div class="day"><h3 class="day-title">Do, 11.06.2026</h3><div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe A</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇲🇽</span><span>Mexiko</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Südafrika</span><span class="flag">🇿🇦</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Mexiko (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:75%;background:#00c853"></div></div>
+        <span class="bar-val">75%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:17%;background:#FFD700"></div></div>
+        <span class="bar-val">17%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Südafrika (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:8%;background:#42a5f5"></div></div>
+        <span class="bar-val">8%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~5.38 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 75% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.99 : 0.66</p>
+          <ul><li><b>Elo-Differenz</b>: 314.88 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.25 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.52 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe A</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇰🇷</span><span>Südkorea</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Tschechien</span><span class="flag">🇨🇿</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Südkorea (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:45%;background:#00c853"></div></div>
+        <span class="bar-val">45%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:29%;background:#FFD700"></div></div>
+        <span class="bar-val">29%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Tschechien (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:26%;background:#42a5f5"></div></div>
+        <span class="bar-val">26%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.63 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 45% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.44 : 1.07</p>
+          <ul><li><b>Elo-Differenz</b>: 75.52 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.04 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div></div></div><div class="day"><h3 class="day-title">Fr, 12.06.2026</h3><div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe B</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇨🇦</span><span>Kanada</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Bosnien-Herz.</span><span class="flag">🇧🇦</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Kanada (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:66%;background:#00c853"></div></div>
+        <span class="bar-val">66%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:21%;background:#FFD700"></div></div>
+        <span class="bar-val">21%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Bosnien-Herz. (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:12%;background:#42a5f5"></div></div>
+        <span class="bar-val">12%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.89 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 66% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.86 : 0.76</p>
+          <ul><li><b>Elo-Differenz</b>: 269.67 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.43 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe D</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇺🇸</span><span>USA</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Paraguay</span><span class="flag">🇵🇾</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">USA (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:30%;background:#00c853"></div></div>
+        <span class="bar-val">30%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:29%;background:#FFD700"></div></div>
+        <span class="bar-val">29%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Paraguay (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:41%;background:#42a5f5"></div></div>
+        <span class="bar-val">41%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.41 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 41% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.19 : 1.34</p>
+          <ul><li><b>Elo-Differenz</b>: -36.93 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.33 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.95 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div></div></div><div class="day"><h3 class="day-title">Sa, 13.06.2026</h3><div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe B</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇶🇦</span><span>Katar</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Schweiz</span><span class="flag">🇨🇭</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Katar (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:10%;background:#00c853"></div></div>
+        <span class="bar-val">10%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:18%;background:#FFD700"></div></div>
+        <span class="bar-val">18%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Schweiz (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:73%;background:#42a5f5"></div></div>
+        <span class="bar-val">73%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~5.3 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 73% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 0.62 : 1.93</p>
+          <ul><li><b>Elo-Differenz</b>: -367.93 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 1.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.32 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe C</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇧🇷</span><span>Brasilien</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Marokko</span><span class="flag">🇲🇦</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Brasilien (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:61%;background:#00c853"></div></div>
+        <span class="bar-val">61%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:22%;background:#FFD700"></div></div>
+        <span class="bar-val">22%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Marokko (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:17%;background:#42a5f5"></div></div>
+        <span class="bar-val">17%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.54 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 61% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.72 : 1.06</p>
+          <ul><li><b>Elo-Differenz</b>: 99.56 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.33 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.83 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe C</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇭🇹</span><span>Haiti</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Schottland</span><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Haiti (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:23%;background:#00c853"></div></div>
+        <span class="bar-val">23%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:27%;background:#FFD700"></div></div>
+        <span class="bar-val">27%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Schottland (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:50%;background:#42a5f5"></div></div>
+        <span class="bar-val">50%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.93 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 50% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.04 : 1.5</p>
+          <ul><li><b>Elo-Differenz</b>: -110.39 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.0 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe D</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇦🇺</span><span>Australien</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Türkei</span><span class="flag">🇹🇷</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Australien (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:22%;background:#00c853"></div></div>
+        <span class="bar-val">22%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:28%;background:#FFD700"></div></div>
+        <span class="bar-val">28%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Türkei (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:50%;background:#42a5f5"></div></div>
+        <span class="bar-val">50%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.95 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 50% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.09 : 1.45</p>
+          <ul><li><b>Elo-Differenz</b>: -37.37 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: -1.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.14 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div></div></div><div class="day"><h3 class="day-title">So, 14.06.2026</h3><div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe E</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇩🇪</span><span>Deutschland</span></div>
+        <div class="score">3 : 0</div>
+        <div class="team away"><span>Curaçao</span><span class="flag">🇨🇼</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Deutschland (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:82%;background:#00c853"></div></div>
+        <span class="bar-val">82%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:12%;background:#FFD700"></div></div>
+        <span class="bar-val">12%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Curaçao (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:6%;background:#42a5f5"></div></div>
+        <span class="bar-val">6%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~5.35 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 82% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 3.09 : 0.74</p>
+          <ul><li><b>Elo-Differenz</b>: 403.71 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.91 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe F</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇳🇱</span><span>Niederlande</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Japan</span><span class="flag">🇯🇵</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Niederlande (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:47%;background:#00c853"></div></div>
+        <span class="bar-val">47%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:31%;background:#FFD700"></div></div>
+        <span class="bar-val">31%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Japan (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:23%;background:#42a5f5"></div></div>
+        <span class="bar-val">23%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.75 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 47% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.49 : 1.03</p>
+          <ul><li><b>Elo-Differenz</b>: 8.37 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.67 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.32 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe E</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇨🇮</span><span>Elfenbeinküste</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Ecuador</span><span class="flag">🇪🇨</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#FFD700;color:#FFD700">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Elfenbeinküste (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:18%;background:#00c853"></div></div>
+        <span class="bar-val">18%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:24%;background:#FFD700"></div></div>
+        <span class="bar-val">24%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Ecuador (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:57%;background:#42a5f5"></div></div>
+        <span class="bar-val">57%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.27 Pkt erwartet</span>
+        <span class="conf" style="color:#FFD700">&#9679; Konfidenz 57% (mittel)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 0.93 : 1.86</p>
+          <ul><li><b>Elo-Differenz</b>: -184.45 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.27 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe F</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇸🇪</span><span>Schweden</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Tunesien</span><span class="flag">🇹🇳</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#ff7043;color:#ff7043">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Schweden (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:44%;background:#00c853"></div></div>
+        <span class="bar-val">44%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:28%;background:#FFD700"></div></div>
+        <span class="bar-val">28%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Tunesien (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:28%;background:#42a5f5"></div></div>
+        <span class="bar-val">28%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~3.61 Pkt erwartet</span>
+        <span class="conf" style="color:#ff7043">&#9679; Konfidenz 44% (niedrig)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.29 : 1.11</p>
+          <ul><li><b>Elo-Differenz</b>: 12.49 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.25 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.41 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div></div></div><div class="day"><h3 class="day-title">Mo, 15.06.2026</h3><div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe H</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇪🇸</span><span>Spanien</span></div>
+        <div class="score">2 : 0</div>
+        <div class="team away"><span>Kap Verde</span><span class="flag">🇨🇻</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Spanien (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:82%;background:#00c853"></div></div>
+        <span class="bar-val">82%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:12%;background:#FFD700"></div></div>
+        <span class="bar-val">12%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Kap Verde (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:6%;background:#42a5f5"></div></div>
+        <span class="bar-val">6%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~5.51 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 82% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 2.96 : 0.6</p>
+          <ul><li><b>Elo-Differenz</b>: 509.51 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.93 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe G</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇧🇪</span><span>Belgien</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Ägypten</span><span class="flag">🇪🇬</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Belgien (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:65%;background:#00c853"></div></div>
+        <span class="bar-val">65%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:21%;background:#FFD700"></div></div>
+        <span class="bar-val">21%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Ägypten (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:14%;background:#42a5f5"></div></div>
+        <span class="bar-val">14%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.92 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 65% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.62 : 0.96</p>
+          <ul><li><b>Elo-Differenz</b>: 179.28 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: -0.5 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -0.07 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe H</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇸🇦</span><span>Saudi-Arabien</span></div>
+        <div class="score">0 : 1</div>
+        <div class="team away"><span>Uruguay</span><span class="flag">🇺🇾</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Auswaertssieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Saudi-Arabien (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:12%;background:#00c853"></div></div>
+        <span class="bar-val">12%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:20%;background:#FFD700"></div></div>
+        <span class="bar-val">20%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Uruguay (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:68%;background:#42a5f5"></div></div>
+        <span class="bar-val">68%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.96 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 68% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 0.73 : 1.92</p>
+          <ul><li><b>Elo-Differenz</b>: -278.19 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.0 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: 0.48 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="grp">Gruppe G</span>
+        <span class="phase">max. 10 P</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇮🇷</span><span>Iran</span></div>
+        <div class="score">1 : 0</div>
+        <div class="team away"><span>Neuseeland</span><span class="flag">🇳🇿</span></div>
+      </div>
+      <div class="tendency-badge" style="border-color:#00c853;color:#00c853">Heimsieg</div>
+      <div class="bars">
+        
+      <div class="bar-row">
+        <span class="bar-label">Iran (Heim)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:66%;background:#00c853"></div></div>
+        <span class="bar-val">66%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Unentschieden</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:22%;background:#FFD700"></div></div>
+        <span class="bar-val">22%</span>
+      </div>
+        
+      <div class="bar-row">
+        <span class="bar-label">Neuseeland (Ausw.)</span>
+        <div class="bar-track"><div class="bar-fill" style="--w:12%;background:#42a5f5"></div></div>
+        <span class="bar-val">12%</span>
+      </div>
+      </div>
+      <div class="meta-row">
+        <span class="exp">~4.87 Pkt erwartet</span>
+        <span class="conf" style="color:#00c853">&#9679; Konfidenz 66% (hoch)</span>
+      </div>
+      <details>
+        <summary>Details &amp; Top-Features</summary>
+        <div class="det">
+          <p>Erwartete Tore (Modell): 1.87 : 0.79</p>
+          <ul><li><b>Elo-Differenz</b>: 185.08 <span class='imp'>(Gewicht 0.381)</span></li><li><b>Direktduell-Vorteil</b>: 0.5 <span class='imp'>(Gewicht 0.094)</span></li><li><b>Form-Gegentore (Diff)</b>: -1.32 <span class='imp'>(Gewicht 0.057)</span></li></ul>
+        </div>
+      </details>
+    </div></div></div>
+  </section>
+
+  <section id="bonus" class="panel">
+    <h2>SRF-Zusatzfragen &ndash; einmalig vor Turnierbeginn</h2>
+    <p class="muted" style="margin-top:-6px">Modell-Tipp = wahrscheinlichster Einzelwert (Modus). Erwartungswert &amp; Verteilung als Kontext.</p>
+    <div class="bonus-note">Basis: 10000 Monte-Carlo-Turniersimulationen (CPU (NumPy vektorisiert)) &middot; berechnet 2026-06-08T19:00:18</div>
+
+        <h3>&#129534; Wie weit kommt 🇨🇭 Schweiz?</h3>
+        <div class="rank-block">
+          <div class="q-head"><span class="q-tip">Tipp: <b>Sechzehntelfinal</b></span>
+            <span class="muted">Achtelfinal o. besser: 53%</span></div>
+          
+            <div class="rank-row">
+              <span class="rank-team">Vorrunde</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:11%;background:#FFD700"></div></div>
+              <span class="rank-val">5%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Sechzehntelfinal &#11088;</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:100%;background:#FFD700"></div></div>
+              <span class="rank-val">42%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Achtelfinal</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:69%;background:#FFD700"></div></div>
+              <span class="rank-val">29%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Viertelfinal</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:34%;background:#FFD700"></div></div>
+              <span class="rank-val">14%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Halbfinal</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:13%;background:#FFD700"></div></div>
+              <span class="rank-val">6%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Final</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:6%;background:#FFD700"></div></div>
+              <span class="rank-val">2%</span>
+            </div>
+            <div class="rank-row">
+              <span class="rank-team">Weltmeister</span>
+              <div class="bar-track small"><div class="bar-fill" style="--w:3%;background:#FFD700"></div></div>
+              <span class="rank-val">1%</span>
+            </div>
+        </div>
+
+    <h3>&#9917; Tore Schweiz im gesamten Turnier</h3>
+    <div class="rank-block">
+      <div class="q-head"><span class="q-tip">Tipp: <b>7</b></span>
+        <span class="muted">Erwartungswert: 8.73</span></div>
+      
+        <div class="rank-row">
+          <span class="rank-team">5</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:70%;background:#00c853"></div></div>
+          <span class="rank-val">8%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">6</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:93%;background:#00c853"></div></div>
+          <span class="rank-val">10%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">7</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:100%;background:#00c853"></div></div>
+          <span class="rank-val">11%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">8</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:91%;background:#00c853"></div></div>
+          <span class="rank-val">10%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">9</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:90%;background:#00c853"></div></div>
+          <span class="rank-val">10%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">10</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:82%;background:#00c853"></div></div>
+          <span class="rank-val">9%</span>
+        </div>
+    </div>
+
+    <h3>&#128081; Tore des Torschuetzenkoenigs</h3>
+    <div class="rank-block">
+      <div class="q-head"><span class="q-tip">Tipp: <b>7</b></span>
+        <span class="muted">Erwartungswert: 7.96</span></div>
+      
+        <div class="rank-row">
+          <span class="rank-team">6</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:60%;background:#00c853"></div></div>
+          <span class="rank-val">15%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">7</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:100%;background:#00c853"></div></div>
+          <span class="rank-val">26%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">8</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:87%;background:#00c853"></div></div>
+          <span class="rank-val">23%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">9</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:61%;background:#00c853"></div></div>
+          <span class="rank-val">16%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">10</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:32%;background:#00c853"></div></div>
+          <span class="rank-val">8%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">11</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:18%;background:#00c853"></div></div>
+          <span class="rank-val">5%</span>
+        </div>
+    </div>
+
+    <h3>&#128683; Anzahl 0:0-Partien im Turnier</h3>
+    <div class="rank-block">
+      <div class="q-head"><span class="q-tip">Tipp: <b>5</b></span>
+        <span class="muted">Erwartungswert: 5.86</span></div>
+      
+        <div class="rank-row">
+          <span class="rank-team">3</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:57%;background:#00c853"></div></div>
+          <span class="rank-val">9%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">4</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:87%;background:#00c853"></div></div>
+          <span class="rank-val">14%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">5</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:100%;background:#00c853"></div></div>
+          <span class="rank-val">17%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">6</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:98%;background:#00c853"></div></div>
+          <span class="rank-val">16%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">7</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:87%;background:#00c853"></div></div>
+          <span class="rank-val">14%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">8</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:56%;background:#00c853"></div></div>
+          <span class="rank-val">9%</span>
+        </div>
+    </div>
+
+    <h2 style="margin-top:34px">Turnier-Ausblick <span class="muted" style="font-size:.6em">(Modell-Einschaetzung, kein offizieller Tipp)</span></h2>
+    <h3>&#127942; Weltmeister-Favoriten</h3>
+    <div class="rank-block">
+        <div class="rank-row">
+          <span class="rank-team">🇪🇸 Spanien &#11088;</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:100%;background:#FFD700"></div></div>
+          <span class="rank-val">21.8%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">🇦🇷 Argentinien</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:97%;background:#FFD700"></div></div>
+          <span class="rank-val">21.1%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">🇫🇷 Frankreich</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:48%;background:#FFD700"></div></div>
+          <span class="rank-val">10.5%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">🇧🇷 Brasilien</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:33%;background:#FFD700"></div></div>
+          <span class="rank-val">7.1%</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-team">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</span>
+          <div class="bar-track small"><div class="bar-fill" style="--w:28%;background:#FFD700"></div></div>
+          <span class="rank-val">6.1%</span>
+        </div></div>
+    <h3>&#127937; Wahrscheinlichste Gruppensieger</h3>
+    <div class="grp-grid">
+        <div class="grp-card">
+          <div class="grp-title">Gruppe A</div>
+          <div class="grp-pick">🇲🇽 Mexiko</div>
+          <div class="grp-prob">48%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe B</div>
+          <div class="grp-pick">🇨🇭 Schweiz</div>
+          <div class="grp-prob">52%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe C</div>
+          <div class="grp-pick">🇧🇷 Brasilien</div>
+          <div class="grp-prob">58%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe D</div>
+          <div class="grp-pick">🇹🇷 Türkei</div>
+          <div class="grp-prob">33%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe E</div>
+          <div class="grp-pick">🇪🇨 Ecuador</div>
+          <div class="grp-prob">44%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe F</div>
+          <div class="grp-pick">🇳🇱 Niederlande</div>
+          <div class="grp-prob">44%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe G</div>
+          <div class="grp-pick">🇧🇪 Belgien</div>
+          <div class="grp-prob">49%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe H</div>
+          <div class="grp-pick">🇪🇸 Spanien</div>
+          <div class="grp-prob">76%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe I</div>
+          <div class="grp-pick">🇫🇷 Frankreich</div>
+          <div class="grp-prob">62%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe J</div>
+          <div class="grp-pick">🇦🇷 Argentinien</div>
+          <div class="grp-prob">74%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe K</div>
+          <div class="grp-pick">🇨🇴 Kolumbien</div>
+          <div class="grp-prob">45%</div>
+        </div>
+        <div class="grp-card">
+          <div class="grp-title">Gruppe L</div>
+          <div class="grp-pick">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div>
+          <div class="grp-prob">55%</div>
+        </div></div>
+    
+  </section>
+</main>
+<footer>
+  Prognosen basieren auf historischen Daten (Elo, Formkurve, H2H, WM-Historik).<br>
+  Keine Gewaehr fuer Richtigkeit. Viel Erfolg!
+</footer>
+<script>
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.getElementById(t.dataset.p).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
