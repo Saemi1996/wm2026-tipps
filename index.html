@@ -24,6 +24,9 @@
         background:#10233a; color:var(--txt); border:1px solid #20405f; font-size:1rem;
         text-transform:uppercase; letter-spacing:.5px; }
   .tab.active { background:var(--gold); color:#0d1b2a; font-weight:700; }
+  .tab-badge { background:#0d1b2a; color:var(--gold); border-radius:11px; padding:0 7px;
+        font-size:.75rem; vertical-align:middle; }
+  .tab.active .tab-badge { background:#0d1b2a; color:var(--gold); }
   main { max-width:1180px; margin:0 auto; padding:14px 16px 60px; }
   .panel { display:none; }
   .panel.active { display:block; }
@@ -43,6 +46,28 @@
   .flag { font-size:1.5rem; }
   .score { font-family:'Oswald',sans-serif; font-size:2rem; color:var(--gold); padding:0 10px;
         font-weight:700; }
+  .score.real { color:var(--txt); }
+  .card.past { border-color:#24405c; }
+  .pts-badge { font-family:'Oswald',sans-serif; border:1.5px solid; border-radius:16px;
+        padding:3px 12px; font-size:.82rem; font-weight:600; white-space:nowrap;
+        text-transform:none; letter-spacing:0; }
+  .tip-line { text-align:center; color:var(--muted); font-size:.9rem; margin:4px 0 10px; }
+  .tip-line b { color:var(--txt); }
+  .tip-line .exact { color:var(--gold); font-weight:600; margin-left:6px; }
+  .tip-line .bf { color:var(--muted); margin-left:4px; cursor:help; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+  .chip { border:1px solid; border-radius:14px; padding:2px 9px; font-size:.72rem; font-weight:600; }
+  .scoreboard { display:flex; gap:20px; flex-wrap:wrap; align-items:center; justify-content:center;
+        background:var(--bg2); border:1px solid #24405c; border-radius:16px;
+        padding:18px 22px; margin:6px 0 22px; }
+  .sb-main { text-align:center; padding-right:20px; border-right:1px solid #24405c; }
+  .sb-num { font-family:'Oswald',sans-serif; font-size:2.8rem; font-weight:700; color:var(--gold);
+        line-height:1; }
+  .sb-lbl { color:var(--muted); font-size:.8rem; text-transform:uppercase; letter-spacing:.5px; }
+  .sb-grid { display:flex; gap:22px; flex-wrap:wrap; }
+  .sb-grid > div { display:flex; flex-direction:column; align-items:center; }
+  .sb-v { font-family:'Oswald',sans-serif; font-size:1.5rem; color:var(--txt); font-weight:600; }
+  .sb-k { color:var(--muted); font-size:.74rem; text-transform:uppercase; letter-spacing:.5px; }
   .tendency-badge { display:inline-block; border:1.5px solid; border-radius:18px; padding:3px 14px;
         font-size:.82rem; font-weight:600; margin:6px auto 12px; }
   .bars { margin:8px 0; }
@@ -88,14 +113,16 @@
 <body>
 <header>
   <h1>WM 2026 <span class="acc">ML-Tipps</span></h1>
-  <div class="sub">SRF Tippspiel &middot; Letzte Aktualisierung: 15.06.2026 08:01</div>
+  <div class="sub">SRF Tippspiel &middot; Letzte Aktualisierung: 15.06.2026 16:41</div>
   <div class="bannerbar">
     <span>&#9881; Quadro P2000 (4.3 GB VRAM, CUDA 12.1)</span>
     <span>&#128202; 32 Spiele in 7 Tagen</span>
+    <span>&#9989; 12 gewertete Spiele</span>
     <span>&#129302; Elo &middot; Form &middot; H2H &middot; WM-Historik</span>
   </div>
   <div class="tabs">
     <div class="tab active" data-p="games">Anstehende Spiele</div>
+    <div class="tab" data-p="results">Ergebnisse <span class="tab-badge">12</span></div>
     <div class="tab" data-p="bonus">Zusatzfragen</div>
   </div>
 </header>
@@ -1486,6 +1513,192 @@
         </div>
       </details>
     </div></div></div>
+  </section>
+
+  <section id="results" class="panel">
+    <p class="muted" style="margin:0 0 10px">Bereits gespielte Partien: echtes Resultat, dein abgegebener Tipp und die erzielten SRF-Punkte. Neuste zuoberst.</p>
+    
+    <div class="scoreboard">
+      <div class="sb-main">
+        <div class="sb-num">42</div>
+        <div class="sb-lbl">Punkte total</div>
+      </div>
+      <div class="sb-grid">
+        <div><span class="sb-v">12</span><span class="sb-k">Spiele</span></div>
+        <div><span class="sb-v">3.5</span><span class="sb-k">&#216; / Spiel</span></div>
+        <div><span class="sb-v">1</span><span class="sb-k">exakt</span></div>
+        <div><span class="sb-v">6</span><span class="sb-k">Tendenz</span></div>
+        <div><span class="sb-v">35%</span><span class="sb-k">von max.</span></div>
+      </div>
+    </div><div class="day"><h3 class="day-title">So, 14.06.2026</h3><div class="cards">
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe F</span>
+        <span class="pts-badge" style="background:#00c8531a;border-color:#00c853;color:#00c853">
+          5 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇸🇪</span><span>Schweden</span></div>
+        <div class="score real">5 : 1</div>
+        <div class="team away"><span>Tunesien</span><span class="flag">🇹🇳</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe F</span>
+        <span class="pts-badge" style="background:#ff52521a;border-color:#ff5252;color:#ff5252">
+          0 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇳🇱</span><span>Niederlande</span></div>
+        <div class="score real">2 : 2</div>
+        <div class="team away"><span>Japan</span><span class="flag">🇯🇵</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe E</span>
+        <span class="pts-badge" style="background:#ff52521a;border-color:#ff5252;color:#ff5252">
+          0 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇨🇮</span><span>Elfenbeinküste</span></div>
+        <div class="score real">1 : 0</div>
+        <div class="team away"><span>Ecuador</span><span class="flag">🇪🇨</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>0 : 1</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe E</span>
+        <span class="pts-badge" style="background:#00c8531a;border-color:#00c853;color:#00c853">
+          5 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇩🇪</span><span>Deutschland</span></div>
+        <div class="score real">7 : 1</div>
+        <div class="team away"><span>Curaçao</span><span class="flag">🇨🇼</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>2 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div></div></div><div class="day"><h3 class="day-title">Sa, 13.06.2026</h3><div class="cards">
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe D</span>
+        <span class="pts-badge" style="background:#ff52521a;border-color:#ff5252;color:#ff5252">
+          0 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇦🇺</span><span>Australien</span></div>
+        <div class="score real">2 : 0</div>
+        <div class="team away"><span>Türkei</span><span class="flag">🇹🇷</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>0 : 1</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe C</span>
+        <span class="pts-badge" style="background:#FFD7001a;border-color:#FFD700;color:#FFD700">
+          10 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇭🇹</span><span>Haiti</span></div>
+        <div class="score real">0 : 1</div>
+        <div class="team away"><span>Schottland</span><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>0 : 1</b> <span class='exact'>&#11088; Exakt</span> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#00c853;color:#00c853">Heimtore &#10003;</span><span class="chip" style="border-color:#00c853;color:#00c853">Gasttore &#10003;</span><span class="chip" style="border-color:#00c853;color:#00c853">Tordiff. &#10003;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe C</span>
+        <span class="pts-badge" style="background:#ff98001a;border-color:#ff9800;color:#ff9800">
+          1 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇧🇷</span><span>Brasilien</span></div>
+        <div class="score real">1 : 1</div>
+        <div class="team away"><span>Marokko</span><span class="flag">🇲🇦</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#00c853;color:#00c853">Heimtore &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe B</span>
+        <span class="pts-badge" style="background:#ff98001a;border-color:#ff9800;color:#ff9800">
+          1 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇶🇦</span><span>Katar</span></div>
+        <div class="score real">1 : 1</div>
+        <div class="team away"><span>Schweiz</span><span class="flag">🇨🇭</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>0 : 1</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#00c853;color:#00c853">Gasttore &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div></div></div><div class="day"><h3 class="day-title">Fr, 12.06.2026</h3><div class="cards">
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe D</span>
+        <span class="pts-badge" style="background:#00c8531a;border-color:#00c853;color:#00c853">
+          5 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇺🇸</span><span>USA</span></div>
+        <div class="score real">4 : 1</div>
+        <div class="team away"><span>Paraguay</span><span class="flag">🇵🇾</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe B</span>
+        <span class="pts-badge" style="background:#ff98001a;border-color:#ff9800;color:#ff9800">
+          1 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇨🇦</span><span>Kanada</span></div>
+        <div class="score real">1 : 1</div>
+        <div class="team away"><span>Bosnien-Herz.</span><span class="flag">🇧🇦</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tendenz &#10007;</span><span class="chip" style="border-color:#00c853;color:#00c853">Heimtore &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div></div></div><div class="day"><h3 class="day-title">Do, 11.06.2026</h3><div class="cards">
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe A</span>
+        <span class="pts-badge" style="background:#00c8531a;border-color:#00c853;color:#00c853">
+          8 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇰🇷</span><span>Südkorea</span></div>
+        <div class="score real">2 : 1</div>
+        <div class="team away"><span>Tschechien</span><span class="flag">🇨🇿</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Gasttore &#10007;</span><span class="chip" style="border-color:#00c853;color:#00c853">Tordiff. &#10003;</span></div>
+    </div>
+    <div class="card past">
+      <div class="card-head">
+        <span class="grp">Gruppe A</span>
+        <span class="pts-badge" style="background:#00c8531a;border-color:#00c853;color:#00c853">
+          6 / 10 Pkt</span>
+      </div>
+      <div class="teams">
+        <div class="team"><span class="flag">🇲🇽</span><span>Mexiko</span></div>
+        <div class="score real">2 : 0</div>
+        <div class="team away"><span>Südafrika</span><span class="flag">🇿🇦</span></div>
+      </div>
+      <div class="tip-line">Dein Tipp: <b>1 : 0</b> <span class='bf' title='Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert'>&#8776;</span></div>
+      <div class="chips"><span class="chip" style="border-color:#00c853;color:#00c853">Tendenz &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Heimtore &#10007;</span><span class="chip" style="border-color:#00c853;color:#00c853">Gasttore &#10003;</span><span class="chip" style="border-color:#3a4d63;color:#3a4d63">Tordiff. &#10007;</span></div>
+    </div></div></div><p class='muted' style='margin-top:18px'>&#8776; = Tipp nachtraeglich aus dem aktuellen Modell rekonstruiert (vor Einfuehrung des Tipp-Verlaufs gespielt). Ab sofort wird der echte Tipp vor Anpfiff festgehalten.</p>
   </section>
 
   <section id="bonus" class="panel">
